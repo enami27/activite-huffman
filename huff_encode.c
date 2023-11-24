@@ -14,20 +14,18 @@ struct code_char HuffmanCode[256];
 
 void ConstruireTableOcc(FILE *fichier, TableOcc_t *TableOcc) {
     int c;
-
-    // Initialisation de TableOcc
+    // init
     for (int i = 0; i < 256; i++) {
         TableOcc->tab[i] = 0;
     }
-
-    // Lecture du fichier et mise à jour de TableOcc
+    // lecture fichier
     c = fgetc(fichier);
     while (c != EOF) {
         TableOcc->tab[c]++;
         c = fgetc(fichier);
     }
 
-    // Affichage des résultats
+    // affichage resultat
     for (int i = 0; i < 256; i++) {
         if (TableOcc->tab[i] != 0)
             printf("Occurences du caractère %c (code %d) : %d\n", i, i,
@@ -40,7 +38,7 @@ fap InitHuffman(TableOcc_t *TableOcc) {
     fap file = fapVide();
     for (int i = 0; i < 256; i++) {
         if (TableOcc->tab[i] != 0) {
-            Arbre noeud = NouveauNoeud(i, TableOcc->tab[i], ArbreVide(), ArbreVide());
+            Arbre noeud = NouveauNoeud(i, TableOcc->tab[i], ArbreVide());
             file = Inserer(file, noeud, TableOcc->tab[i]);
         }
     }
@@ -49,8 +47,20 @@ fap InitHuffman(TableOcc_t *TableOcc) {
 
 
 Arbre ConstruireArbre(fap file) {
-    /* A COMPLETER */
-    printf("Programme non realise (ConstruireArbre)\n");
+    while (!EstFapVide(file)) {
+        Arbre n1 = ExtraireMin(&file);
+
+        if (EstFapVide(file)) {
+            return n1; 
+        }
+
+        Arbre n2 = ExtraireMin(&file);
+        Arbre nouveau = NouveauNoeud(n1, '\0', n2);
+        int nouvellePriorite = Priorite(n1) + Priorite(n2);
+
+        file = Inserer(file, nouveau, nouvellePriorite);
+    }
+
     return ArbreVide();
 }
 
