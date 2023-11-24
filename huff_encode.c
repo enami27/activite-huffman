@@ -111,10 +111,24 @@ void ConstruireCode(Arbre huff) {
     }
 }
 
-
 void Encoder(FILE *fic_in, FILE *fic_out, Arbre ArbreHuffman) {
-    /* A COMPLETER */
-    printf("Programme non realise (Encoder)\n");
+    int c;
+    BFILE *bf;
+
+    EcrireArbre(fic_out, ArbreHuffman);
+
+    bf = bstart(fic_out, "w");
+
+    c = fgetc(fic_in);
+    while (c != EOF) {
+        struct code_char code = HuffmanCode[c];
+        for (int i = 0; i < code.lg; i++) {
+            bitwrite(bf, code.code[i]);
+        }
+        c = fgetc(fic_in);
+    }
+
+    bstop(bf);
 }
 
 int main(int argc, char *argv[]) {
