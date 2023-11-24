@@ -69,9 +69,48 @@ Arbre ConstruireArbre(fap file) {
 
 
 void ConstruireCode(Arbre huff) {
-    /* A COMPLETER */
-    printf("Programme non realise (ConstruireCode)\n");
+    int pileNœuds[256]; // stocke adresses des noeuds de l'arbre
+    int pileCodes[256][256]; // stocke code huffman
+    int longueurs[256]; // stocke longueur code
+    int pileTaille = 0; 
+
+    if (!EstVide(huff)) {
+        pileNœuds[pileTaille] = (int)huff;
+        longueurs[pileTaille] = 0;
+        pileTaille++;
+    }
+
+    while (pileTaille > 0) {
+        pileTaille--;
+        Arbre noeudCourant = (Arbre)pileNœuds[pileTaille];
+        int longueurCourante = longueurs[pileTaille];
+        int *codeCourant = pileCodes[pileTaille];
+
+        if (EstVide(FilsGauche(noeudCourant)) && EstVide(FilsDroit(noeudCourant))) {
+            int caractere = Etiq(noeudCourant);
+            HuffmanCode[caractere].lg = longueurCourante;
+            for (int i = 0; i < longueurCourante; i++) {
+                HuffmanCode[caractere].code[i] = codeCourant[i];
+            }
+        } else {
+            if (!EstVide(FilsDroit(noeudCourant))) {
+                pileNœuds[pileTaille] = (int)FilsDroit(noeudCourant);
+                memcpy(pileCodes[pileTaille], codeCourant, longueurCourante * sizeof(int));
+                pileCodes[pileTaille][longueurCourante] = 1;
+                longueurs[pileTaille] = longueurCourante + 1;
+                pileTaille++;
+            }
+            if (!EstVide(FilsGauche(noeudCourant))) {
+                pileNœuds[pileTaille] = (int)FilsGauche(noeudCourant);
+                memcpy(pileCodes[pileTaille], codeCourant, longueurCourante * sizeof(int));
+                pileCodes[pileTaille][longueurCourante] = 0;
+                longueurs[pileTaille] = longueurCourante + 1;
+                pileTaille++;
+            }
+        }
+    }
 }
+
 
 void Encoder(FILE *fic_in, FILE *fic_out, Arbre ArbreHuffman) {
     /* A COMPLETER */
