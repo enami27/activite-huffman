@@ -47,22 +47,25 @@ fap InitHuffman(TableOcc_t *TableOcc) {
 
 
 Arbre ConstruireArbre(fap file) {
-    while (!EstFapVide(file)) {
-        Arbre n1 = ExtraireMin(&file);
+    while (!est_fap_vide(file)) {
+        Arbre n1, n2;
+        int priorite1, priorite2;
 
-        if (EstFapVide(file)) {
+        file = extraire(file, &n1, &priorite1);
+        if (est_fap_vide(file)) {
             return n1; 
         }
+        file = extraire(file, &n2, &priorite2);
 
-        Arbre n2 = ExtraireMin(&file);
         Arbre nouveau = NouveauNoeud(n1, '\0', n2);
-        int nouvellePriorite = Priorite(n1) + Priorite(n2);
+        int nouvellePriorite = priorite1 + priorite2;
 
-        file = Inserer(file, nouveau, nouvellePriorite);
+        file = inserer(file, nouveau, nouvellePriorite);
     }
 
-    return ArbreVide();
+    return ArbreVide(); 
 }
+
 
 
 void ConstruireCode(Arbre huff) {
