@@ -37,10 +37,16 @@ void ConstruireTableOcc(FILE *fichier, TableOcc_t *TableOcc) {
 
 
 fap InitHuffman(TableOcc_t *TableOcc) {
-    /* A COMPLETER */
-    printf("Programme non realise (InitHuffman)\n");
-    return NULL;
+    fap file = fapVide();
+    for (int i = 0; i < 256; i++) {
+        if (TableOcc->tab[i] != 0) {
+            Arbre noeud = NouveauNoeud(i, TableOcc->tab[i], ArbreVide(), ArbreVide());
+            file = Inserer(file, noeud, TableOcc->tab[i]);
+        }
+    }
+    return file;
 }
+
 
 Arbre ConstruireArbre(fap file) {
     /* A COMPLETER */
